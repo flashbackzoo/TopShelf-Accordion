@@ -1,11 +1,12 @@
-// TopShelf - Accordion ~ Copyright (c) 2011 - 2012 David Craig, http://flashbackzoo.net
+// TopShelf - Accordion ~ Copyright (c) 2011 - 2012 David Craig, https://github.com/flashbackzoo/TopShelf-Accordion
 // Released under MIT license, http://www.opensource.org/licenses/mit-license.php
 
 (function ($) {
-	$.fn.tsSlideshow = function (options) {
+	$.fn.tsAccordion = function (options) {
 		// default settings
 		var settings = $.extend({
 			"transition":"simple"
+			, "multipleOpen":false
 		}, options);
 
 		return this.each(function () {
@@ -13,24 +14,9 @@
 			var accordion = {
 				container: this
 				, settings: settings
-				, panels: getParts($(this).find("[data-ui='accordion-panel']"), this)
-				, handles: getParts($(this).find("[data-ui='accordion-handle']"), this)
+				, panels: $(this).find("[data-ui='accordion-panel']")
+				, handles: $(this).find("[data-ui='accordion-handle']")
 			};
-			
-			// returns elements in context of the passed accordion. used for nesting.
-			function getParts (els, context) {
-				var i = 0
-					, l = els.length
-					, parts = [];
-				
-				for (i = 0; i < l; i += 1 ) {
-					if ($(els[i]).closest("[data-ui='accordion']")[0] === context) {
-						parts[parts.length] = els[i];
-					}
-				}
-				
-				return parts;
-			}
 
 			////////////
 			// MODELS //
@@ -41,11 +27,39 @@
 				var fx = {};
 				
 				(function () {
-					fx.tranOut = function (o) {};
+					fx.tranOut = function (o) {
+						var i = 0
+							, l = 0;
+						
+						$(o.outgoing).css({
+							"height":$(o.outgoing).find("[data-ui='accordion-handle']").outerHeight()
+						});
+					};
 
-					fx.tranIn = function (o) {};
+					fx.tranIn = function (o) {
+						var i = 0
+							, els = $(o.incoming).children()
+							, l = els.length
+							, panelHeight = 0;
+						
+						for (i = 0; i < l; i += 1) {
+							panelHeight += $(els[i]).outerHeight(true);
+						}
+						$(o.incoming).css({
+							"height":panelHeight
+						});
+					};
 
-					fx.init = function () {};
+					fx.init = function (o) {
+						var i = 0
+							, l = o.panels.length;
+						
+						for (i = 0; i < l; i += 1) {
+							$(o.panels[i]).css({
+								"height":$(o.panels[i]).find("[data-ui='accordion-handle']").outerHeight()
+							});
+						}
+					};
 				})();
 				return fx;
 			};
@@ -59,9 +73,28 @@
 				var ctr = {};
 				
 				(function () {
-					ctr.open = function () {};
-
-					ctr.close = function () {};
+					ctr.change = function (panel) {
+						var o = {};
+						
+						o.incoming = panel[0];
+						
+						if ($(o.incoming).hasClass("current")) {
+							o.outgoing = panel[0];
+							$(o.incoming).removeClass("current");
+							fx.tranOut(o);
+						} else {
+							if (accordion.settings.multipleOpen) {
+								$(o.incoming).addClass("current");
+								fx.tranIn(o);
+							} else {
+								o.outgoing = $(accordion.container).find("[data-ui='accordion-panel'].current")[0];
+								$(accordion.panels).removeClass("current");
+								$(o.incoming).addClass("current");
+								fx.tranOut(o);
+								fx.tranIn(o);
+							}
+						}
+					};
 				})();
 				return ctr;
 			};
@@ -75,7 +108,17 @@
 				var evt = {};
 				
 				(function () {
-					evt.handles = function () {};
+					evt.handles = function () {
+						var i = 0
+							, l = accordion.handles.length;
+						
+						for (i = 0; i < l; i += 1) {
+							$(accordion.handles[i]).bind("click", function(e) {
+								e.preventDefault();
+								ctr.change($(this).closest("[data-ui='accordion-panel']"));
+							});
+						}
+					};
 				})();
 				return evt;
 			};
@@ -91,7 +134,7 @@
 				var evt = events(ctr);
 				
 				// set initial model state
-				fx.init();
+				fx.init(accordion);
 				
 				// bind events
 				evt.handles();

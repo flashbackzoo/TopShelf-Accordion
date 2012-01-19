@@ -1,0 +1,10 @@
+*[data-ui='accordion']{
+	
+}
+*[data-ui='accordion-panel']{
+	position:relative;
+	overflow:hidden;
+}
+*[data-ui='accordion-handle']{
+	display:block;
+}

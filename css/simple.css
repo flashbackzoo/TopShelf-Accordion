@@ -1,0 +1,9 @@
+.accordion{
+	width:350px;
+}
+.accordion .panel{
+	background:#eaeaea;
+}
+.accordion .panel .handle{
+	background:#aeaeae;
+}
