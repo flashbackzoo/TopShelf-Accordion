@@ -27,13 +27,16 @@
 				var fx = {};
 				
 				(function () {
-					fx.tranOut = function (o) {
-						var i = 0
-							, l = 0;
-						
-						$(o.outgoing).css({
-							"height":$(o.outgoing).find("[data-ui='accordion-handle']").outerHeight()
-						});
+					fx.tranOut = function (o, callback) {
+						(function (o, callback) {
+							$(o.outgoing).animate({
+								"height":$(o.outgoing).find("[data-ui='accordion-handle']").outerHeight()
+							}, 300, function () {
+								if (typeof callback === "function") {
+									callback(o);
+								}
+							});
+						})(o, callback);
 					};
 
 					fx.tranIn = function (o) {
@@ -45,9 +48,9 @@
 						for (i = 0; i < l; i += 1) {
 							panelHeight += $(els[i]).outerHeight(true);
 						}
-						$(o.incoming).css({
+						$(o.incoming).animate({
 							"height":panelHeight
-						});
+						}, 300);
 					};
 
 					fx.init = function (o) {
@@ -90,8 +93,10 @@
 								o.outgoing = $(accordion.container).find("[data-ui='accordion-panel'].current")[0];
 								$(accordion.panels).removeClass("current");
 								$(o.incoming).addClass("current");
-								fx.tranOut(o);
-								fx.tranIn(o);
+								fx.tranOut(o, fx.tranIn);
+								if (!o.outgoing) {
+									fx.tranIn(o);
+								}
 							}
 						}
 					};
