@@ -32,6 +32,7 @@
 	color:#666;
 	padding:10px 15px;
 	text-decoration:none;
+	text-shadow: 1px 1px #fefefe;
 	background: #eaeaea; /* Old browsers */
 	background: -moz-linear-gradient(top,  #fefefe 0%, #eaeaea 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fefefe), color-stop(100%,#eaeaea)); /* Chrome,Safari4+ */
@@ -53,4 +54,12 @@
 .accordion .panel.current:last-child .handle{
 	border-bottom-left-radius: 0px;
 	border-bottom-right-radius: 0px;
+}
+.accordion .panel p{
+	margin:10px 15px;
+	font-family:Helvetica, Arial, sans-serif;
+	font-weight:100;
+	font-size:14px;
+	color:#777;
+	text-shadow: 1px 1px #fefefe;
 }

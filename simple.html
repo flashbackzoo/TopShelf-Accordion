@@ -13,26 +13,28 @@
 			<div class="panel" data-ui="accordion-panel">
 				<a href="" class="handle" data-ui="accordion-handle">First</a>
 				<p>
-					1st
+					Lorem ipsum dolor sit amet.
 				</p>
 			</div>
 			<div class="panel" data-ui="accordion-panel">
 				<a href="" class="handle" data-ui="accordion-handle">Second</a>
 				<p>
-					2nd
+					Lorem ipsum dolor sit amet.
 				</p>
 			</div>
 			<div class="panel" data-ui="accordion-panel">
 				<a href="" class="handle" data-ui="accordion-handle">Third</a>
 				<p>
-					3rd
+					Lorem ipsum dolor sit amet.
 				</p>
 			</div>
 		</div>
 		<script>
 			$(function(){
 				$("[data-ui='accordion']").tsAccordion({
-					//"multipleOpen":true
+					"transition":"simple"
+					,"multiOpen":false
+					, "startOpen":false
 				});
 			});
 		</script>

@@ -6,7 +6,8 @@
 		// default settings
 		var settings = $.extend({
 			"transition":"simple"
-			, "multipleOpen":false
+			, "multiOpen":false
+			, "startOpen":false
 		}, options);
 
 		return this.each(function () {
@@ -57,10 +58,18 @@
 						var i = 0
 							, l = o.panels.length;
 						
-						for (i = 0; i < l; i += 1) {
-							$(o.panels[i]).css({
-								"height":$(o.panels[i]).find("[data-ui='accordion-handle']").outerHeight()
-							});
+						if (accordion.settings.startOpen) {
+							for (i = 0; i < l; i += 1) {
+								o.incoming = o.panels[i];
+								fx.tranIn(o);
+								$(o.panels[i]).addClass("current");
+							}
+						} else {
+							for (i = 0; i < l; i += 1) {
+								$(o.panels[i]).css({
+									"height":$(o.panels[i]).find("[data-ui='accordion-handle']").outerHeight()
+								});
+							}
 						}
 					};
 				})();
@@ -86,7 +95,7 @@
 							$(o.incoming).removeClass("current");
 							fx.tranOut(o);
 						} else {
-							if (accordion.settings.multipleOpen) {
+							if (accordion.settings.multiOpen) {
 								$(o.incoming).addClass("current");
 								fx.tranIn(o);
 							} else {
